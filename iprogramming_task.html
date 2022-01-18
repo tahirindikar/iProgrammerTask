@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>IProgrammer Task</title>
+
+  <style type="text/css">
+    
+    .card p, .card h5{
+            text-align: center;
+        }
+
+        .card{
+            border: 1px solid black;
+            padding-top: 10px;
+            height: 325px;
+        }
+</style>
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">IProgrammer Task</h2>
+    </div>
+
+    <div class="container">  
+        <div class="row" id="mycard"></div>
+    </div>               
+
+    <div class="container" >
+        <table class="table" border="1">
+              <thead >
+                  <tr >
+                      <td colspan="4" class="text-center"><h3> COMPARISON TABLE</h3></td>
+                  </tr>
+                <tr>
+                    <th scope="col">Image</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">URL</th>
+                    <th scope="col">Title</th>
+                </tr>
+            </thead>
+            <tbody id="mytable"></tbody>
+        </table>
+    </div>
+
+    <footer>
+        <h5 class="text-center">By Tahir Indikar</h5>
+    </footer>
+
+</body>
+
+
+<script type="text/javascript" charset="utf-8">
+    var url = "https://jsonplaceholder.typicode.com/photos";
+    var newItemList = [];
+    //fetch- For accessing data from API
+    fetch(url)
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            //console.log(data);
+            responseData = data;
+            showData(data);
+        });
+
+
+    // showdata - To show API data in html(card)
+    function showData(data) {
+        //console.log(data);
+        var card = document.getElementById("mycard");
+        for (var i = 0; i <= 11; i++) {
+       
+        var item = `<div class="col-md-4 card">
+            <img src="${data[i].thumbnailUrl}" alt="image" class="center-block"></img> 
+            <h5  >${data[i].title}</h5>
+            <p >${data[i].id}</p>
+            <p  >${data[i].url}</p>
+            <p > <input type="button" onclick="getData(${data[i].id},value)" class="btn btn-primary" value="Compare" id="${data[i].id}"/> </p>
+            </div>`;
+
+            card.innerHTML += item;
+        }
+    }
+
+
+    //getData - calls when button is clicked
+    function getData(id, value) {
+        if (value == "Remove") {
+            var btn = document.getElementById(id);
+            btn.setAttribute("value", "Compare");
+            removeData(id);
+        } else {
+            document.getElementById(id).setAttribute("value", "Remove");
+            addData(id);
+        }
+    }
+
+
+    // addData - To add data on click of compare button to display data in table
+    function addData(id) {
+        addItem = responseData.filter((result) => result.id == id);
+        newItemList.push(addItem);
+        //console.log(newItemList)
+        displayData(addItem, id);
+    }
+
+
+    // removeData - To remove data on click of remove button from the table
+    function removeData(id) {
+        //console.log(id)
+        var currentItem = document.querySelector(`.row-${id}`);
+        var parrentItem = document.getElementById("mytable");
+        //console.log("parentItem", parrentItem);
+
+        parrentItem?.removeChild(currentItem);
+
+        //console.log("this is current item" + currentItem);
+    }
+
+    // displayData - To show data into the table
+    function displayData(data, id) {
+        for (var i = 0; i < data.length; i++) {
+            console.log(data.length);
+            var row = `<tr class="row-${id}">
+                             <th><img src="${data[i].thumbnailUrl}" height = "60px",width="60px"></th>
+                                  <td>${data[i].id}</td>
+                                  <td>${data[i].url}</td>
+                                  <td>${data[i].title}</td>
+                          </tr>`;
+        }
+
+        document.getElementById("mytable").innerHTML += row;
+    }
+</script>
+
+
+</html>
